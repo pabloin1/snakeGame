@@ -116,6 +116,7 @@ function changeDirection(e) {
         velocityY = 0;
     }
 }
+//add functional work
 
 // Inicializar la comida al principio del juego
 function placeFood() {
