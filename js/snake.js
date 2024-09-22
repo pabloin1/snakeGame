@@ -18,9 +18,9 @@ var gameOver = false;
 var score = 0;
 
 // Inicialización de los Web Workers
-var movementWorker = new Worker("movementWorker.js");
-var collisionWorker = new Worker("collisionWorker.js");
-var foodWorker = new Worker("foodWorker.js");
+var movementWorker = new Worker("./js/movementWorker.js");
+var collisionWorker = new Worker("./js/collisionWorker.js");
+var foodWorker = new Worker("./js/foodWorker.js");
 
 window.onload = function () {
     board = document.getElementById("board");
@@ -52,8 +52,9 @@ function update() {
     context.fillRect(foodX, foodY, blockSize, blockSize);
 
     // Enviar el estado actual al movementWorker
-    movementWorker.postMessage({ snakeX, snakeY, velocityX, velocityY, blockSize });
+    movementWorker.postMessage({ snakeX, snakeY, velocityX, velocityY, blockSize, snakeBody });
 }
+
 
 function handleMovementWorkerMessage(event) {
     var data = event.data;
@@ -75,6 +76,7 @@ function handleMovementWorkerMessage(event) {
     });
 }
 
+
 function handleCollisionWorkerMessage(event) {
     var collisionData = event.data;
 
@@ -82,17 +84,29 @@ function handleCollisionWorkerMessage(event) {
     if (collisionData.gameOver) {
         gameOver = true;
         alert("Game Over! Score: " + score);
+        return;
     } 
 
     // Verificar si la serpiente comió la comida
     if (collisionData.eatFood) {
-        snakeBody.push([foodX, foodY]);  // Extender el cuerpo de la serpiente
+        // Añadir un nuevo segmento a la serpiente en la posición de su cola
+        let lastSegment = snakeBody[snakeBody.length - 1];
+        if (lastSegment) {
+            snakeBody.push([lastSegment[0], lastSegment[1]]);
+        } else {
+            // Si no hay cuerpo aún, agregar el segmento en la posición de la cabeza
+            snakeBody.push([snakeX, snakeY]);
+        }
+        
         score++;  // Incrementar el puntaje
 
         // Generar una nueva comida
         foodWorker.postMessage({ cols: cols, rows: rows, blockSize: blockSize });
     }
 }
+
+
+
 
 function handleFoodWorkerMessage(event) {
     var foodData = event.data;
