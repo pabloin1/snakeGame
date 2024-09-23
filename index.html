@@ -2,16 +2,29 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" , content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Snake</title>
     <link rel="stylesheet" href="./css/snake.css" />
-    <script src="./js/snake.js"></script>
+    
   </head>
   <body>
-    <h1>Snake</h1>
+    <h1>Snake Up</h1>
     <canvas id="board"></canvas>
-    <button id="resetButton" style="display: none" onclick="resetGame()">
-      Reiniciar
-    </button>
+
+    <!-- Modal para mostrar el Game Over -->
+    <div id="gameOverModal" class="modal">
+      <div class="modal-content">
+        <span id="closeModal" class="close">&times;</span>
+        <p>Game Over! Your final score is: <span id="finalScore"></span></p>
+        <button id="restartButton">Restart</button>
+      </div>
+    </div>
+
+    <audio id="backgroundMusic" loop>
+      <source src="./assets/videoplayback.m4a" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+    
+    <script src="./js/snake.js"></script>
   </body>
 </html>
