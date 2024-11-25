@@ -1,42 +1,41 @@
 // Variables del juego
-var blockSize = 25;
-var rows = 20;
-var cols = 20;
-var board;
-var context;
+const blockSize = 25; // Tamaño del bloque
+const rows = 20; // Número de filas
+const cols = 20; // Número de columnas
+let board;
+let context;
 
-var snakeX = blockSize * 5;
-var snakeY = blockSize * 5;
-var velocityX = 0;
-var velocityY = 0;
-var snakeBody = [];
+let snakeX = blockSize * 5;
+let snakeY = blockSize * 5;
+let velocityX = 0;
+let velocityY = 0;
+let snakeBody = [];
 
-var foodX;
-var foodY;
+let foodX;
+let foodY;
 
-var gameOver = false;
-var score = 0;
-var updateInterval = 100; // Intervalo de actualización inicial (100 ms)
-var gameInterval;
+let gameOver = false;
+let score = 0;
+let updateInterval = 100; // Intervalo de actualización inicial (100 ms)
+let gameInterval;
 
-var eatSound = new Audio("./assets/Efecto de sonido - Moneda de Mario (HD).mp3");
-var gameOverSound = new Audio("./assets/mario-bros game over.mp3");
-
+const eatSound = new Audio("./assets/Efecto de sonido - Moneda de Mario (HD).mp3");
+const gameOverSound = new Audio("./assets/mario-bros game over.mp3");
 
 // Elementos del modal
-var modal = document.getElementById("gameOverModal");
-var finalScoreElement = document.getElementById("finalScore");
-var restartButton = document.getElementById("restartButton");
-var closeModal = document.getElementById("closeModal");
+const modal = document.getElementById("gameOverModal");
+const finalScoreElement = document.getElementById("finalScore");
+const restartButton = document.getElementById("restartButton");
+const closeModal = document.getElementById("closeModal");
 
 // Inicialización de los Web Workers
-var movementWorker = new Worker("./js/movementWorker.js");
-var collisionWorker = new Worker("./js/collisionWorker.js");
-var foodWorker = new Worker("./js/foodWorker.js");
+const movementWorker = new Worker("./js/movementWorker.js");
+const collisionWorker = new Worker("./js/collisionWorker.js");
+const foodWorker = new Worker("./js/foodWorker.js");
 
 window.onload = function () {
   // Obtener el audio y configurarlo
-  var backgroundMusic = document.getElementById("backgroundMusic");
+  const backgroundMusic = document.getElementById("backgroundMusic");
 
   if (backgroundMusic) {
     backgroundMusic.volume = 0.2; // Ajustar el volumen (0.0 a 1.0)
@@ -67,7 +66,7 @@ window.onload = function () {
   };
 
   window.onclick = function (event) {
-    if (event.target == modal) {
+    if (event.target === modal) {
       modal.style.display = "none";
     }
   };
@@ -80,10 +79,10 @@ function update() {
   context.fillStyle = "black";
   context.fillRect(0, 0, board.width, board.height);
 
-  // Dibujar la comida con un diseño más atractivo
+  // Dibujar la comida
   drawFood();
 
-  // Dibujar la serpiente con sombra y color degradado
+  // Dibujar la serpiente
   drawSnake();
 
   // Enviar el estado actual al movementWorker
@@ -122,7 +121,7 @@ function drawFood() {
 
 function drawSnake() {
   for (let i = 0; i < snakeBody.length; i++) {
-    let gradient = context.createLinearGradient(0, 0, blockSize, blockSize);
+    const gradient = context.createLinearGradient(0, 0, blockSize, blockSize);
     gradient.addColorStop(0, "#00FF00"); // Verde claro
     gradient.addColorStop(1, "#006400"); // Verde oscuro
 
@@ -148,7 +147,7 @@ function drawSnake() {
 }
 
 function handleMovementWorkerMessage(event) {
-  var data = event.data;
+  const data = event.data;
   snakeX = data.snakeX;
   snakeY = data.snakeY;
   snakeBody = data.snakeBody;
@@ -174,7 +173,7 @@ function handleMovementWorkerMessage(event) {
 }
 
 function handleCollisionWorkerMessage(event) {
-  var collisionData = event.data;
+  const collisionData = event.data;
 
   if (collisionData.eatFood) {
     eatSound.play(); // Reproducir sonido cuando come
@@ -189,15 +188,13 @@ function handleCollisionWorkerMessage(event) {
     clearInterval(gameInterval); // Detener el juego
 
     // Pausar la música de fondo
-    var backgroundMusic = document.getElementById("backgroundMusic");
+    const backgroundMusic = document.getElementById("backgroundMusic");
     if (backgroundMusic) {
       backgroundMusic.pause(); // Pausar la música al terminar el juego
     }
 
-    var finalScoreElement = document.getElementById("finalScore");
     finalScoreElement.innerText = score;
 
-    var modal = document.getElementById("gameOverModal");
     modal.style.display = "block";
 
     return;
@@ -210,27 +207,27 @@ function handleCollisionWorkerMessage(event) {
     updateInterval = Math.max(50, 100 - score * 5);
     clearInterval(gameInterval);
     gameInterval = setInterval(update, updateInterval);
-    foodWorker.postMessage({ cols: cols, rows: rows, blockSize: blockSize });
+    foodWorker.postMessage({ cols, rows, blockSize });
   }
 }
 
 function handleFoodWorkerMessage(event) {
-  var foodData = event.data;
+  const foodData = event.data;
   foodX = foodData.foodX;
   foodY = foodData.foodY;
 }
 
 function changeDirection(e) {
-  if (e.code == "ArrowUp" && velocityY != 1) {
+  if (e.code === "ArrowUp" && velocityY !== 1) {
     velocityX = 0;
     velocityY = -1;
-  } else if (e.code == "ArrowDown" && velocityY != -1) {
+  } else if (e.code === "ArrowDown" && velocityY !== -1) {
     velocityX = 0;
     velocityY = 1;
-  } else if (e.code == "ArrowLeft" && velocityX != 1) {
+  } else if (e.code === "ArrowLeft" && velocityX !== 1) {
     velocityX = -1;
     velocityY = 0;
-  } else if (e.code == "ArrowRight" && velocityX != -1) {
+  } else if (e.code === "ArrowRight" && velocityX !== -1) {
     velocityX = 1;
     velocityY = 0;
   }
@@ -238,12 +235,11 @@ function changeDirection(e) {
 
 // Inicializar la comida al principio del juego
 function placeFood() {
-  foodWorker.postMessage({ cols: cols, rows: rows, blockSize: blockSize });
+  foodWorker.postMessage({ cols, rows, blockSize });
 }
 
 // Reiniciar el juego cuando el jugador pierda
 function resetGame() {
-  var modal = document.getElementById("gameOverModal");
   modal.style.display = "none";
 
   snakeX = blockSize * 5;
@@ -259,7 +255,7 @@ function resetGame() {
   gameInterval = setInterval(update, updateInterval);
 
   // Reproducir la música nuevamente al reiniciar el juego
-  var backgroundMusic = document.getElementById("backgroundMusic");
+  const backgroundMusic = document.getElementById("backgroundMusic");
   if (backgroundMusic) {
     backgroundMusic.currentTime = 0; // Reiniciar la música desde el principio
     backgroundMusic.play();

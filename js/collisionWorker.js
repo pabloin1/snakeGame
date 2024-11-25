@@ -1,8 +1,8 @@
 self.onmessage = function (event) {
-    var { snakeX, snakeY, snakeBody, cols, rows, blockSize, foodX, foodY } = event.data;
+    const { snakeX, snakeY, snakeBody, cols, rows, blockSize, foodX, foodY } = event.data;
 
-    var gameOver = false;
-    var eatFood = false;
+    let gameOver = false;
+    let eatFood = false;
 
     // Colisión con bordes
     if (snakeX < 0 || snakeX >= cols * blockSize || snakeY < 0 || snakeY >= rows * blockSize) {
