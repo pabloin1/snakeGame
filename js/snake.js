@@ -1,3 +1,4 @@
+//snake.js
 // Variables del juego
 const blockSize = 25; // Tamaño del bloque
 const rows = 20; // Número de filas

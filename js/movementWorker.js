@@ -1,3 +1,5 @@
+//movementWorker.js
+
 let snakeBody = [];
 
 self.onmessage = function (event) {

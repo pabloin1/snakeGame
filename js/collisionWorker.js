@@ -1,3 +1,4 @@
+//collisionWorker.js
 self.onmessage = function (event) {
     const { snakeX, snakeY, snakeBody, cols, rows, blockSize, foodX, foodY } = event.data;
 

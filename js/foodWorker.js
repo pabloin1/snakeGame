@@ -1,3 +1,4 @@
+//foodWorker.js
 self.onmessage = function (event) {
     const { cols, rows, blockSize } = event.data;
     const foodX = Math.floor(Math.random() * cols) * blockSize;
