@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<structure>
+    <type>pda</type>
+    <automaton>
+        <!-- States -->
+        <state id="0" name="q0">
+            <x>100</x>
+            <y>100</y>
+            <initial/>
+        </state>
+        <state id="1" name="q1">
+            <x>250</x>
+            <y>100</y>
+        </state>
+        <state id="2" name="q2">
+            <x>400</x>
+            <y>100</y>
+            <final/>
+        </state>
+        <!-- Transitions -->
+        <!-- Push 'a' onto the stack -->
+        <transition>
+            <from>0</from>
+            <to>0</to>
+            <read>a</read>
+            <pop>z</pop>
+            <push>az</push>
+        </transition>
+        <transition>
+            <from>0</from>
+            <to>0</to>
+            <read>a</read>
+            <pop>a</pop>
+            <push>aa</push>
+        </transition>
+        <!-- Pop 'a' from the stack when reading 'b' -->
+        <transition>
+            <from>0</from>
+            <to>0</to>
+            <read>b</read>
+            <pop>a</pop>
+            <push>λ</push>
+        </transition>
+        <!-- Transition to acceptance when the stack contains only 'z' -->
+        <transition>
+            <from>0</from>
+            <to>1</to>
+            <read>λ</read>
+            <pop>z</pop>
+            <push>z</push>
+        </transition>
+        <transition>
+            <from>1</from>
+            <to>2</to>
+            <read>λ</read>
+            <pop>z</pop>
+            <push>λ</push>
+        </transition>
+    </automaton>
+</structure>
